@@ -11,6 +11,7 @@ const Signup = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
+        // cognito Userpool signup
         Userpool.signUp(email, password, [], null, (err, data) => {
             if (err) {
                 console.log(err.message);
