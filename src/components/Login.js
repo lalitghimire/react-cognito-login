@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { CognitoUser, AuthenticationDetails } from 'amazon-cognito-identity-js';
+import Userpool from '../Userpool';
 
 const Login = () => {
     const [loginEmail, setLoginEmail] = useState('');
@@ -9,6 +11,28 @@ const Login = () => {
 
     const onSubmit = (e) => {
         e.preventDefault();
+
+        //create new user object
+        const user = new CognitoUser({
+            Username: loginEmail,
+            Pool: Userpool,
+        });
+
+        // provide Authentication crdentials
+        const authDetails = new AuthenticationDetails({
+            Username: loginEmail,
+            Password: loginPassword,
+        });
+
+        // authenticate the user
+        user.authenticateUser(authDetails, {
+            onSuccess: (data) => {
+                console.log('onSuccess: ', data);
+            },
+            onFailure: (err) => {
+                console.error('OnFailure: ', err);
+            },
+        });
     };
 
     return (
@@ -26,7 +50,7 @@ const Login = () => {
                         setLoginPassword(e.target.value);
                     }}
                 />
-                <button type='submit'>Signup</button>
+                <button type='submit'>Login</button>
             </form>
         </div>
     );
